@@ -1,4 +1,7 @@
+import 'package:cms/themes/themeprovider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,7 +14,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 229, 230, 231),
+      backgroundColor: Theme.of(context).colorScheme.surface,
 
       // body: ListView.separated(
       //   itemCount: 5,
@@ -24,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Stack(
             children: [
               Container(
-                color: Color.fromARGB(255, 252, 252, 252),
+                color: Theme.of(context).colorScheme.primary,
                 height: 470,
                 margin: EdgeInsets.only(bottom: 20),
               ),
@@ -63,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Stack(
             children: [
               Container(
-                color: Color.fromARGB(255, 252, 252, 252),
+                color: Theme.of(context).colorScheme.primary,
                 height: 300,
                 margin: EdgeInsets.only(bottom: 20),
               ),
@@ -81,17 +84,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
-                  makeNavButton(
-                    Icons.meeting_room,
-                    "Meeting",
-                    context,
-                  ),
+                  makeNavButton(Icons.meeting_room, "Meeting", context),
                   makeNavButton(Icons.task, "Task", context),
-                  makeNavButton(
-                    Icons.pie_chart,
-                    "Finance statics",
-                    context,
-                  ),
+                  makeNavButton(Icons.pie_chart, "Finance statics", context),
                   makeNavButton(
                     Icons.add_to_home_screen_sharp,
                     "Tools",
@@ -101,51 +96,127 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
-          Container(
-            color: Color.fromARGB(255, 252, 252, 252),
-            height: 400,
-            margin: EdgeInsets.only(bottom: 20),
+          Stack(
+            children: [
+              Container(
+                color: Theme.of(context).colorScheme.primary,
+                height: 120,
+                margin: EdgeInsets.only(bottom: 20),
+              ),
+              Column(
+                children: [
+                  makeTitleText("Interface"),
+                  Row(
+                    spacing: 7,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.all(10),
+                        child: Icon(Icons.sunny, size: 30),
+                      ),
+                      Text("Theme", style: TextStyle(fontSize: 20)),
+                      Expanded(
+                        flex: 1,
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            margin: EdgeInsets.only(right: 30),
+                            child: makeThemeButton(), // toggle theme
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
           ),
           Stack(
             children: [
               Container(
-                color: Color.fromARGB(255, 252, 252, 252),
+                color: Theme.of(context).colorScheme.primary,
                 height: 200,
                 margin: EdgeInsets.only(bottom: 20),
               ),
               Column(
                 spacing: 7,
                 children: [
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    margin: EdgeInsets.only(left: 10, top: 10, bottom: 10),
-                    child: Text(
-                      "Settings",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
+                  makeTitleText("Settings"),
                   makeNavButton(Icons.file_copy_sharp, "About us", context),
-                  makeNavButton(Icons.help_center, "Help", context)
+                  makeNavButton(Icons.help_center, "Help", context),
                 ],
               ),
             ],
           ),
+          Stack(
+            children: [
+              Container(
+                color: Theme.of(context).colorScheme.primary,
+                height: 1000,
+                margin: EdgeInsets.only(bottom: 20),
+              ),
 
-          
-          Container(
-            color: Color.fromARGB(255, 252, 252, 252),
-            height: 5000,
-            margin: EdgeInsets.only(bottom: 20),
+              Column(
+                children: [
+                  makeTitleText("Account"),
+                  ListTile(
+                    title: Text(
+                      "Log out",
+                      style: TextStyle(color: Color(0xffFE2B25), fontSize: 30),
+                    ),
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            content: Text("Are you sure you want to log out?"),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop;
+                                },
+                                child: Text("Log out"),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
+
+                  // Spacer(),
+                ],
+              ),
+            ],
+          ),
+          Align(
+            child: Container(
+              padding: EdgeInsets.all(7),
+              child: Image(
+                image: AssetImage("images/gdgbanner.png"),
+                fit: BoxFit.cover,
+                width: double.infinity,
+              ),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget makeNavButton(IconData iconName, String buttonText, BuildContext context) {
+  Widget makeTitleText(String title) => Container(
+    alignment: Alignment.centerLeft,
+    margin: EdgeInsets.only(left: 10, top: 10, bottom: 10),
+    child: Text(
+      title,
+      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+    ),
+  );
+
+  Widget makeNavButton(
+    IconData iconName,
+    String buttonText,
+    BuildContext context,
+  ) {
     return ListTile(
       leading: Icon(iconName, size: 30),
       title: Text(buttonText, style: TextStyle(fontSize: 25)),
@@ -201,5 +272,14 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       Text("#Username", style: TextStyle(fontSize: 20)),
     ],
+  );
+
+  Widget? makeThemeButton() => IconButton(
+    padding: EdgeInsets.only(right: 50),
+    iconSize: 30,
+    onPressed: () {
+      Provider.of<Themeprovider>(context, listen: false).toggleTheme();
+    },
+    icon: Icon(Icons.sunny_snowing),
   );
 }
