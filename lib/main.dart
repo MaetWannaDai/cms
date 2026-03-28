@@ -1,4 +1,4 @@
-import "package:cms/Homescreen.dart";
+import "package:cms/screens/ProfileNavScreen.dart";
 import "package:cms/themes/theme.dart";
 import "package:cms/themes/themeprovider.dart";
 import "package:flutter/material.dart";
@@ -8,19 +8,19 @@ void main() {
   runApp(
     ChangeNotifierProvider(
       create: (context) => Themeprovider(),
-      child: const MyCMS(),
+      child: const MyApp(),
     ),
   );
 }
 
-class MyCMS extends StatefulWidget {
-  const MyCMS({super.key});
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
 
   @override
-  State<MyCMS> createState() => _MyCMSState();
+  State<MyApp> createState() => _MyAppState();
 }
 
-class _MyCMSState extends State<MyCMS> {
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
